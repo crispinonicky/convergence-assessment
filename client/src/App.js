@@ -2,6 +2,9 @@ import './App.css';
 import React, { Component } from 'react';
 import axios from 'axios'
 
+const baseURL = process.env.REACT_APP_SERVER_POINT;
+console.log(baseURL)
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -20,22 +23,33 @@ class App extends Component {
     console.log(this.state);
   }
 
-  // handleClick(e) {
-  //   e.preventDefault()
-  //   api
-  //     .login(this.state.username, this.state.password)
-  //     .then(result => {
-  //       console.log('SUCCESS!')
-  //       this.props.history.push('/') // Redirect to the home page
-  //     })
-  //     .catch(err => this.setState({ message: err.toString() }))
-  // }
+  // service = axios.create({
+  //   baseURL,
+  //   withCredentials: true,
+  // });
+  
+  handleSubmit(event) {
+    event.preventDefault();
+
+    axios
+      .post(baseURL + "/name",
+      {
+        first: this.state.firstName,
+        last: this.state.lastName
+      }
+      )
+      .then((nameData) => {
+        console.log(nameData);
+      })
+      .catch((error) => console.log(error));
+  }
+
 
   render() {
     return (
       <div className="name-input">
         <h2>Please Enter Your Name</h2>
-        <form>
+        <form onSubmit={this.handleSubmit}>
           First Name:{' '}
           <input
             type="text"
@@ -52,11 +66,8 @@ class App extends Component {
             onChange={this.handleInputChange}
           />{' '}
           <br />
-          {/* <button onClick={e => this.handleClick(e)}>Login</button> */}
+          <button>Add Name</button>
         </form>
-        {this.state.message && (
-          <div className="info info-danger">{this.state.message}</div>
-        )}
       </div>
     )
   }
