@@ -1,6 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
-import axios from 'axios'
+import axios from 'axios';
+import Recaptcha from 'react-recaptcha';
 
 const baseURL = process.env.REACT_APP_SERVER_POINT;
 console.log(baseURL)
@@ -12,9 +13,33 @@ class App extends Component {
       firstName: '',
       lastName: '',
       allNames: null,
-      loading: true
+      loading: true,
+      isVerified: false
     };
     this.handleInputChange = this.handleInputChange.bind(this)
+    this.callback = this.callback.bind(this)
+    this.verifyCallback = this.verifyCallback.bind(this)
+  }
+
+  verify() {
+    if (this.state.isVerified === false) {
+      alert("Please verify your identity before continuing.");
+    }
+  }
+
+  verifyCallback(response) {
+    if (response) {
+      this.setState({
+        isVerified: true
+      })
+    } 
+  }
+
+  callback() {
+    console.log("Widget is loaded");
+    // this.setState({
+    //   isVerified: true
+    // })
   }
 
   getAllNames(){
@@ -51,9 +76,11 @@ class App extends Component {
   }
   
   handleSubmit(event) {
-    event.preventDefault();
 
-    axios
+    if (this.state.isVerified === false) {
+      this.verify();
+    } else {
+      axios
       .post(baseURL + "/name",
       {
         first: this.state.firstName,
@@ -73,9 +100,12 @@ class App extends Component {
       });
     }
 
+    event.preventDefault();
+
+    }
+
   render() {
 
-    //this.getAllNames()
     if (this.state.allNames == null) {
     axios.get(baseURL + "/allNames")
     .then((allNames) => {
@@ -110,8 +140,18 @@ class App extends Component {
             onChange={this.handleInputChange}
           />{' '}
           <br />
+
+          <Recaptcha
+            sitekey="6LfhtTcaAAAAAJDYbf8wihNzEnerwsc_ve_0rKom"
+            render="explicit"
+            verifyCallback={this.verifyCallback}
+            onloadCallback={this.callback()}
+          />
+
           <button>Add Name</button>
         </form>
+
+
 
         <ul className="all-names">{this.showAllNames()}</ul>
 
