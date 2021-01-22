@@ -4,7 +4,6 @@ import axios from 'axios';
 import Recaptcha from 'react-recaptcha';
 
 const baseURL = process.env.REACT_APP_SERVER_POINT;
-console.log(baseURL)
 
 class App extends Component {
   constructor(props) {
@@ -23,7 +22,7 @@ class App extends Component {
 
   verify() {
     if (this.state.isVerified === false) {
-      alert("Please verify your identity before continuing.");
+      alert("Please verify your identity with the Recaptcha before continuing. If it is not visible, please refresh the page and try again.");
     }
   }
 
@@ -36,16 +35,12 @@ class App extends Component {
   }
 
   callback() {
-    console.log("Widget is loaded");
-    // this.setState({
-    //   isVerified: true
-    // })
+    console.log("Recaptcha loaded");
   }
 
   getAllNames(){
     axios.get(baseURL + "/allNames")
     .then((allNames) => {
-      console.log(allNames)
       this.setState({
         allNames: allNames,
         loading: false
@@ -58,7 +53,6 @@ class App extends Component {
 
   showAllNames() {
     if (this.state.loading === false) {
-      //console.log(this.state.allNames);
       return this.state.allNames.data.names.map((name) => (
         <div className="name-card">
             <li>{name.first} {name.last}</li>
@@ -67,12 +61,10 @@ class App extends Component {
     }
   }
 
-
   handleInputChange(event) {
     this.setState({
       [event.target.name]: event.target.value,
     })
-    console.log(this.state);
   }
   
   handleSubmit(event) {
@@ -88,7 +80,6 @@ class App extends Component {
       }
       )
       .then((nameData) => {
-        console.log('asdasdasd', nameData);
         this.setState({
           firstName: '',
           lastName: ''
@@ -109,7 +100,6 @@ class App extends Component {
     if (this.state.allNames == null) {
     axios.get(baseURL + "/allNames")
     .then((allNames) => {
-      console.log(allNames)
       this.setState({
         allNames: allNames,
         loading: false
@@ -121,39 +111,42 @@ class App extends Component {
   } 
 
     return (
-      <div className="name-input">
-        <h2>Please Enter Your Name</h2>
-        <form onSubmit={(e) => this.handleSubmit(e)} >
-          First Name:{' '}
-          <input
-            type="text"
-            value={this.state.firstName}
-            name="firstName"
-            onChange={this.handleInputChange}
-          />{' '}
-          <br />
-          Last Name:{' '}
-          <input
-            type="test"
-            value={this.state.lastName}
-            name="lastName"
-            onChange={this.handleInputChange}
-          />{' '}
-          <br />
+      <div className="student-app">
+        <div className="enrollment-form">
+          <h2>Enter Your Name</h2>
+          <form onSubmit={(e) => this.handleSubmit(e)} >
+            First Name:{' '}
+            <input
+              type="text"
+              value={this.state.firstName}
+              name="firstName"
+              onChange={this.handleInputChange}
+            />{' '}
+            <br />
+            Last Name:{' '}
+            <input
+              type="test"
+              value={this.state.lastName}
+              name="lastName"
+              onChange={this.handleInputChange}
+            />{' '}
+            <br />
 
-          <Recaptcha
-            sitekey="6LfhtTcaAAAAAJDYbf8wihNzEnerwsc_ve_0rKom"
-            render="explicit"
-            verifyCallback={this.verifyCallback}
-            onloadCallback={this.callback()}
-          />
+            <Recaptcha
+              sitekey= '6LfhtTcaAAAAAJDYbf8wihNzEnerwsc_ve_0rKom'
+              render="explicit"
+              verifyCallback={this.verifyCallback}
+              onloadCallback={this.callback()}
+            />
 
-          <button>Add Name</button>
-        </form>
+            <button>Enroll Student</button>
+          </form>
+        </div>
 
-
-
-        <ul className="all-names">{this.showAllNames()}</ul>
+        <div className = "student-list">
+          <h3>Student Table</h3>
+          <ul className="all-names">{this.showAllNames()}</ul>
+        </div>
 
       </div>
     )
