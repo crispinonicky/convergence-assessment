@@ -11,10 +11,37 @@ class App extends Component {
     this.state = {
       firstName: '',
       lastName: '',
-      allNames:[]
+      allNames: null,
+      loading: true
     };
     this.handleInputChange = this.handleInputChange.bind(this)
   }
+
+  getAllNames(){
+    axios.get(baseURL + "/allNames")
+    .then((allNames) => {
+      console.log(allNames)
+      this.setState({
+        allNames: allNames,
+        loading: false
+      })
+    })
+    .catch((err) => {
+      throw err;
+    })
+  }
+
+  showAllNames() {
+    if (this.state.loading === false) {
+      //console.log(this.state.allNames);
+      return this.state.allNames.data.names.map((name) => (
+        <div className="name-card">
+            <li>{name.first} {name.last}</li>
+        </div>
+      ));
+    }
+  }
+
 
   handleInputChange(event) {
     this.setState({
@@ -22,11 +49,6 @@ class App extends Component {
     })
     console.log(this.state);
   }
-
-  // service = axios.create({
-  //   baseURL,
-  //   withCredentials: true,
-  // });
   
   handleSubmit(event) {
     event.preventDefault();
@@ -39,17 +61,39 @@ class App extends Component {
       }
       )
       .then((nameData) => {
-        console.log(nameData);
+        console.log('asdasdasd', nameData);
+        this.setState({
+          firstName: '',
+          lastName: ''
+        })
+        window.location.reload();
       })
-      .catch((error) => console.log(error));
-  }
-
+      .catch((err) => {
+        throw err;
+      });
+    }
 
   render() {
+
+    //this.getAllNames()
+    if (this.state.allNames == null) {
+    axios.get(baseURL + "/allNames")
+    .then((allNames) => {
+      console.log(allNames)
+      this.setState({
+        allNames: allNames,
+        loading: false
+      })
+    })
+    .catch((err) => {
+      throw err;
+    })
+  } 
+
     return (
       <div className="name-input">
         <h2>Please Enter Your Name</h2>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={(e) => this.handleSubmit(e)} >
           First Name:{' '}
           <input
             type="text"
@@ -68,6 +112,9 @@ class App extends Component {
           <br />
           <button>Add Name</button>
         </form>
+
+        <ul className="all-names">{this.showAllNames()}</ul>
+
       </div>
     )
   }
