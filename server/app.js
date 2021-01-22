@@ -28,7 +28,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ['localhost:3000', 'https://convergenz-student-table.netlify.app/'],
+    origin: ['localhost:3000', 'https://convergenz-student-table.netlify.app'],
     credentials: true, // this needs set up on the frontend side as well
     //                   in axios "withCredentials: true"
   })
