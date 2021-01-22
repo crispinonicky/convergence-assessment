@@ -55,7 +55,7 @@ class App extends Component {
     if (this.state.loading === false) {
       return this.state.allNames.data.names.map((name) => (
         <div className="name-card">
-            <li>{name.first} {name.last}</li>
+            <p>{name.first} {name.last}</p>
         </div>
       ));
     }
@@ -113,7 +113,7 @@ class App extends Component {
     return (
       <div className="student-app">
         <div className="enrollment-form">
-          <h2>Enter Your Name</h2>
+          <h2><u>Enter Your Name</u></h2>
           <form onSubmit={(e) => this.handleSubmit(e)} >
             First Name:{' '}
             <input
@@ -144,8 +144,8 @@ class App extends Component {
         </div>
 
         <div className = "student-list">
-          <h3>Student Table</h3>
-          <ul className="all-names">{this.showAllNames()}</ul>
+          <h3><u>Student Table</u></h3>
+          <div className="all-names">{this.showAllNames()}</div>
         </div>
 
       </div>

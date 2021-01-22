@@ -10,15 +10,16 @@ const logger       = require('morgan');
 const path         = require('path');
 const cors         = require("cors");
 
+const uri = "mongodb+srv://nick:nick@cluster0.unee8.mongodb.net/convergenz-names?retryWrites=true&w=majority";
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log("Connected to the database!")
+})
+.catch(err => console.log(err))
 
-mongoose
-  .connect('mongodb://localhost/convergence', {useNewUrlParser: true})
-  .then(x => {
-    console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
-  })
-  .catch(err => {
-    console.error('Error connecting to mongo', err)
-  });
 
 const app_name = require('./package.json').name;
 const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.')[0]}`);

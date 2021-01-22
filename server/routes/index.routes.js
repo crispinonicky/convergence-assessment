@@ -16,7 +16,8 @@ router.post("/name", (req, res, next) => {
 
 router.get("/allNames", (req, res, next) => {
   Name.find()
-  .then((allNamesFromDB) => res.status(200).json({ names: allNamesFromDB }))
+  .then((allNamesFromDB) => 
+  res.status(200).json({ names: allNamesFromDB }))
   .catch((err) => next(err));
 })
 
